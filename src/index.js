@@ -1,6 +1,7 @@
 const express = require('express');
 const { readTalkersData } = require('./utils/readTalkers');
 const { getById } = require('./utils/getById');
+const { generationToken } = require('./utils/generationToken');
 
 const app = express();
 app.use(express.json());
@@ -33,9 +34,15 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // Req 03
-// app.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if ([email, password].includes(undefined)) {
+    return res.status(400).json({ message: 'Campos ausentes' });
+  }
 
-// });
+  const token = generationToken();
+  return res.status(200).json({ token });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
