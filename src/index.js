@@ -2,6 +2,10 @@ const express = require('express');
 const { readTalkersData } = require('./utils/readTalkers');
 const { getById } = require('./utils/getById');
 const { generationToken } = require('./utils/generationToken');
+// const auth = require('./middlewares/auth');
+// const validateFormat = require('./middlewares/validateFormat');
+const validateLogin = require('./middlewares/validateLogin');
+// const validatePassword = require('./middlewares/validatePassword');
 
 const app = express();
 app.use(express.json());
@@ -33,18 +37,27 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(talkerInfo);
 });
 
-// Req 03
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  if ([email, password].includes(undefined)) {
-    return res.status(400).json({ message: 'Campos ausentes' });
-  }
+// Req 03 e 04
+app.post('/login', validateLogin, /* validateFormat, */ /*  auth, */ (req, res) => {
+  // const { email, password } = req.body;
+  // if ([email].includes(undefined)) {
+  //   return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  // }
+  // if ([password].includes(undefined)) {
+  //   return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  // }
 
   const token = generationToken();
   return res.status(200).json({ token });
 });
 
-// Req 04
+// Req 05
+// app.post('/talker', (req, res) => {
+// const { name, age, talk } = req.headers;
+// if (name, age, talk) {
+//   return res.status(200).json('talker');
+// }
+// });
 
 app.listen(PORT, () => {
   console.log('Online');
