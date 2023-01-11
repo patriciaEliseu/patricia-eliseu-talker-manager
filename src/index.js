@@ -34,7 +34,7 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // Req 03
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if ([email, password].includes(undefined)) {
     return res.status(400).json({ message: 'Campos ausentes' });
@@ -43,6 +43,8 @@ app.post('/login', async (req, res) => {
   const token = generationToken();
   return res.status(200).json({ token });
 });
+
+// Req 04
 
 app.listen(PORT, () => {
   console.log('Online');
