@@ -1,11 +1,15 @@
 const express = require('express');
+// const readLine = require('readline-sync');
 const { readTalkersData } = require('./utils/readTalkers');
 const { getById } = require('./utils/getById');
 const { generationToken } = require('./utils/generationToken');
-// const auth = require('./middlewares/auth');
-// const validateFormat = require('./middlewares/validateFormat');
 const validateLogin = require('./middlewares/validateLogin');
-// const validatePassword = require('./middlewares/validatePassword');
+const { writeNewTalkers } = require('./utils/writeNewTalkers');
+const validateToken = require('./middlewares/validateToken');
+const validateNewTalker = require('./middlewares/validateNewTalker');
+const validateTalk = require('./middlewares/validateTalk');
+const validateRate = require('./middlewares/validateRate');
+const validateWatchedAt = require('./middlewares/validateWatchedAt');
 
 const app = express();
 app.use(express.json());
@@ -39,26 +43,19 @@ app.get('/talker/:id', async (req, res) => {
 
 // Req 03 e 04
 app.post('/login', validateLogin, /* validateFormat, */ /*  auth, */ (req, res) => {
-  // const { email, password } = req.body;
-  // if ([email].includes(undefined)) {
-  //   return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  // }
-  // if ([password].includes(undefined)) {
-  //   return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  // }
-
   const token = generationToken();
   return res.status(200).json({ token });
 });
 
 // Req 05
-// app.post('/talker', (req, res) => {
-// const { name, age, talk } = req.headers;
-// if (name, age, talk) {
-//   return res.status(200).json('talker');
-// }
-// });
-
+app.post('/talker', validateToken, validateNewTalker, validateTalk, validateWatchedAt, validateRate,
+   async (req, res) => {
+  const newT = await writeNewTalkers(req.body);
+  // const writeLista = newT;
+   return res.status(201).json(newT);
+  // console.log(newTalker); 
+ });
+ 
 app.listen(PORT, () => {
   console.log('Online');
 });
