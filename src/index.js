@@ -10,6 +10,8 @@ const validateNewTalker = require('./middlewares/validateNewTalker');
 const validateTalk = require('./middlewares/validateTalk');
 const validateRate = require('./middlewares/validateRate');
 const validateWatchedAt = require('./middlewares/validateWatchedAt');
+const { writeUpdateTalkers } = require('./utils/writeUpdateTalkers');
+const { deleteTalkersData } = require('./utils/deleteTalkersData');
 
 const app = express();
 app.use(express.json());
@@ -55,6 +57,31 @@ app.post('/talker', validateToken, validateNewTalker, validateTalk, validateWatc
    return res.status(201).json(newT);
   // console.log(newTalker); 
  });
+
+//  Req 06
+app.put('/talker/:id', 
+validateToken,
+validateNewTalker,
+validateTalk,
+validateWatchedAt,
+validateRate,
+  async (req, res) => {
+  const { id } = req.params;
+  const writeUpdatedTalker = req.body;
+  const updateTalker = await writeUpdateTalkers(Number(id), writeUpdatedTalker);
+  return res.status(200).json(updateTalker);
+});
+
+// Req 07
+app.delete('./talker/:id', validateToken, async (req, res) => {
+  try {
+  const { id } = req.params;
+  await deleteTalkersData(Number(id));
+    return res.status(204).end();
+  } catch (errror) {
+    res.status(401).send();
+  }
+});
  
 app.listen(PORT, () => {
   console.log('Online');
