@@ -73,14 +73,10 @@ validateRate,
 });
 
 // Req 07
-app.delete('./talker/:id', validateToken, async (req, res) => {
-  try {
+app.delete('/talker/:id', validateToken, async (req, res) => {
   const { id } = req.params;
   await deleteTalkersData(Number(id));
     return res.status(204).end();
-  } catch (errror) {
-    res.status(401).send();
-  }
 });
  
 app.listen(PORT, () => {
