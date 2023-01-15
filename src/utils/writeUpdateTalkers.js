@@ -6,7 +6,7 @@ const writeUpdateTalkers = async (id, writeUpdateTalker) => {
     const oldUpdateTalkers = await readTalkersData();
     const updateTalker = { id, ...writeUpdateTalker };
     const updateData = oldUpdateTalkers.reduce((talkerList, currentTalker) => {
-    if (currentTalker.id === updateTalker.id) return [...talkerList, updateTalker];
+    if (currentTalker.id === updateTalker.id) return updateTalker;
     return [...talkerList, currentTalker];
   }, []);
     const allTalkers = JSON.stringify([updateData]);
@@ -16,7 +16,7 @@ const writeUpdateTalkers = async (id, writeUpdateTalker) => {
     } catch (error) {
       console.error(error.message);
     }
-};
+    };
 
 module.exports = {
   writeUpdateTalkers,
